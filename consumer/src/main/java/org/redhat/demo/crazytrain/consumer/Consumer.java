@@ -29,7 +29,7 @@ public class Consumer {
     
   @Incoming("train-monitoring")
   @Produces(MediaType.SERVER_SENT_EVENTS)
-  public Object  process(String result) {
+  public Object process(String result) {
     System.out.println("Consumer kafka recived  : "+result);
     ObjectMapper mapper = new ObjectMapper();
     JsonNode jsonNode;
