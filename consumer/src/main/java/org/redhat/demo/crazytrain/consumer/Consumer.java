@@ -2,11 +2,8 @@ package org.redhat.demo.crazytrain.consumer;
 
 import java.util.Base64;
 
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -23,7 +20,6 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.reactivestreams.Publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -39,16 +35,9 @@ public class Consumer {
   private static final Logger LOGGER = Logger.getLogger(Consumer.class);
   private final BroadcastProcessor<String> broadcastProcessor = BroadcastProcessor.create();
 
-  // private final Emitter<String> emitter;
-
-  // public Consumer(@Channel("my-channel") Emitter<String> emitter) {
-  //     this.emitter = emitter;
-  // }
-    
   @Incoming("train-monitoring")
-  //@Produces(MediaType.SERVER_SENT_EVENTS)
   public void process(String result) {
-//    System.out.println("Consumer kafka recived  : "+result);
+    LOGGER.debug("Consumer kafka recived  : "+result);
     ObjectMapper mapper = new ObjectMapper();
     JsonNode jsonNode;
     try {
@@ -98,11 +87,7 @@ public class Consumer {
   public Multi<String> stream() {
       return broadcastProcessor.toHotStream();
   }
-  private byte[] matToByteArray(Mat image) {
-    byte[] data = new byte[(int) (image.total() * image.channels())];
-    image.get(0, 0, data);
-    return data;
-  }
+
   private Mat addSquareToimage(Mat image, JsonNode detections){
     if(detections == null || detections.size()==0 || !detections.isArray())
       return image;
