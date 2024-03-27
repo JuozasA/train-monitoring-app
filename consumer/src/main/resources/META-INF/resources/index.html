@@ -1,14 +1,58 @@
-<!-- public/index.html -->
 <!DOCTYPE html>
 <html>
+<head>
+    <style>
+        #frame-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        #image-frame {
+            flex-grow: 1;
+        }
+        #button-frame {
+            width: 200px;
+        }
+        #button-frame1, #button-frame2 {
+            height: 50%;
+        }
+    </style>
+</head>
 <body>
-    <iframe id="image" src=""></iframe>
+    <div id="frame-container">
+        <div id="image-frame">
+            <img id="stream-image" src="" alt="Stream image">
+        </div>
+        <div id="button-frame">
+            <div id="button-frame1">
+                <button onclick="callPostUrl1()">Call POST URL 1</button>
+            </div>
+            <div id="button-frame2">
+                <button onclick="callPostUrl2()">Call POST URL 2</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // var source = new EventSource('/stream');
-        // source.onmessage = function(event) {
-        //     var blob = new Blob([event.data], {type: 'image/jpeg'});
-        //     document.getElementById('image').src = URL.createObjectURL(blob);
-        // };
+        function callPostUrl1() {
+            // Call the first POST URL
+            fetch('http://example.com/post1', { method: 'POST' });
+        }
+
+        function callPostUrl2() {
+            // Call the second POST URL
+            fetch('http://example.com/post2', { method: 'POST' });
+        }
+
+        function startImageStream() {
+            // Start the image stream
+            const source = new EventSource('/train-monitoring');
+            source.onmessage = function(event) {
+                //console.log('data:image/jpeg;base64,' + event.data);
+                document.getElementById('stream-image').src = 'data:image/jpeg;base64,' + event.data;
+            };
+        }
+
+        startImageStream();
     </script>
 </body>
 </html>

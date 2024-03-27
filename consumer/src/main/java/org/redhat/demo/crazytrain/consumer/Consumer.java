@@ -1,40 +1,58 @@
 package org.redhat.demo.crazytrain.consumer;
 
 import java.util.Base64;
+
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 
 
 import org.jboss.logging.Logger;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.reactivestreams.Publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@ApplicationScoped
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.operators.multi.processors.BroadcastProcessor;
+
+//@ApplicationScoped
+@Path("/train-monitoring")
 public class Consumer {
   private static final Logger LOGGER = Logger.getLogger(Consumer.class);
+  private final BroadcastProcessor<String> broadcastProcessor = BroadcastProcessor.create();
+
+  // private final Emitter<String> emitter;
+
+  // public Consumer(@Channel("my-channel") Emitter<String> emitter) {
+  //     this.emitter = emitter;
+  // }
     
   @Incoming("train-monitoring")
-  @Produces(MediaType.SERVER_SENT_EVENTS)
-  public Object process(String result) {
-    System.out.println("Consumer kafka recived  : "+result);
+  //@Produces(MediaType.SERVER_SENT_EVENTS)
+  public void process(String result) {
+//    System.out.println("Consumer kafka recived  : "+result);
     ObjectMapper mapper = new ObjectMapper();
     JsonNode jsonNode;
     try {
-      jsonNode = mapper.readTree(result);
+          jsonNode = mapper.readTree(result);
           JsonNode data = jsonNode.get("data");
           String id = data.get("id").asText();
           String imageBytesBase64  = data.get("image").asText();
@@ -54,7 +72,17 @@ public class Consumer {
           }
           //LOGGER.infof("Received dans consumer kafka: Id '%s' Image '%s'",id, imageBytes);
           // System.out.println("Received dans consumer kafka: Id "+id+" Image "+new String(imageBytes));
-          return null;
+          // Create a MatOfByte object to store the output
+          MatOfByte matOfByte = new MatOfByte();
+             // Convert the Mat object to a JPEG image
+           Imgcodecs.imencode(".jpg", image, matOfByte);
+
+           // Convert the MatOfByte to a byte array
+           byte[] imgBytes = matOfByte.toArray();
+
+            // Encode the image in base64
+            String base64Image = Base64.getEncoder().encodeToString(imgBytes);
+            broadcastProcessor.onNext(base64Image);
     } catch (JsonMappingException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -62,8 +90,19 @@ public class Consumer {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-      return null;
   }  
+
+
+  @GET
+  @Produces(MediaType.SERVER_SENT_EVENTS)
+  public Multi<String> stream() {
+      return broadcastProcessor.toHotStream();
+  }
+  private byte[] matToByteArray(Mat image) {
+    byte[] data = new byte[(int) (image.total() * image.channels())];
+    image.get(0, 0, data);
+    return data;
+  }
   private Mat addSquareToimage(Mat image, JsonNode detections){
     if(detections == null || detections.size()==0 || !detections.isArray())
       return image;
