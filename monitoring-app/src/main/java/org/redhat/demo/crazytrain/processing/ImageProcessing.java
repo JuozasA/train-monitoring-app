@@ -1,4 +1,4 @@
-package org.redhat.demo.crazytrain.consumer;
+package org.redhat.demo.crazytrain.processing;
 
 import java.util.Base64;
 
@@ -8,7 +8,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.inject.Inject;
 
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import org.jboss.logging.Logger;
 import org.opencv.core.CvType;
@@ -20,6 +23,7 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.redhat.demo.crazytrain.services.SaveService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -29,11 +33,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.operators.multi.processors.BroadcastProcessor;
 
-//@ApplicationScoped
 @Path("/train-monitoring")
-public class Consumer {
-  private static final Logger LOGGER = Logger.getLogger(Consumer.class);
+public class ImageProcessing {
+  private static final Logger LOGGER = Logger.getLogger(ImageProcessing.class);
   private final BroadcastProcessor<String> broadcastProcessor = BroadcastProcessor.create();
+  @Inject
+  SaveService saveService;
+  @ConfigProperty(name = "monitoring.saveImage")
+  boolean saveImage;
+
+  @ConfigProperty(name = "monitoring.tmpFolder") 
+  String tmpFolder;
 
   @Incoming("train-monitoring")
   public void process(String result) {
@@ -51,14 +61,17 @@ public class Consumer {
           image = addSquareToimage(image, data.get("detections"));
           long timestamp = System.currentTimeMillis();
           String filename = timestamp+".jpg";
-          try {
-              if (!Imgcodecs.imwrite(filename, image)) {
-                  LOGGER.error("Failed to save image");
-              }
-          } catch (Exception e) {
-              // TODO: handle exception
-              LOGGER.error("Failed to save image", e);
-          }
+           // Save the image to the file system (asynchronously)
+           if(saveImage){
+            String filepath = tmpFolder+"/" + timestamp + ".jpg";
+            saveService.saveImageAsync(image, filepath).thenAccept(success -> {
+                    if (success) {
+                        LOGGER.debug("Image saved successfully");
+                    } else {
+                        LOGGER.error("Failed to save image");
+                    }
+                });
+           }
           //LOGGER.infof("Received dans consumer kafka: Id '%s' Image '%s'",id, imageBytes);
           // System.out.println("Received dans consumer kafka: Id "+id+" Image "+new String(imageBytes));
           // Create a MatOfByte object to store the output

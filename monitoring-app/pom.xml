@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.redhat.demo.crazytrain</groupId>
-  <artifactId>consumer</artifactId>
+  <artifactId>monitoring-app</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <properties>
     <compiler-plugin.version>3.12.1</compiler-plugin.version>
@@ -31,31 +31,42 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive</artifactId>
-  </dependency>
+    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
     </dependency>
-    <!-- <dependency>
-      <groupId>io.smallrye.reactive</groupId>
-      <artifactId>smallrye-reactive-messaging-kafka</artifactId>
-      <version>3.8.0</version>
-    </dependency> -->
     <dependency>
       <groupId>io.cloudevents</groupId>
       <artifactId>cloudevents-core</artifactId>
       <version>2.3.0.redhat-00001</version>
-  </dependency>
-  <dependency>
-    <groupId>io.quarkiverse.opencv</groupId>
-    <artifactId>quarkus-opencv</artifactId>
-    <version>2.1.0</version>
-  </dependency>
-  <dependency>
-    <groupId>io.cloudevents</groupId>
-    <artifactId>cloudevents-kafka</artifactId>
-    <version>2.3.0.redhat-00001</version>
-</dependency>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkiverse.opencv</groupId>
+      <artifactId>quarkus-opencv</artifactId>
+      <version>2.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.cloudevents</groupId>
+      <artifactId>cloudevents-kafka</artifactId>
+      <version>2.3.0.redhat-00001</version>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-kubernetes</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-openshift</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-kubernetes-config</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
