@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        #frame-container {
-            display: flex;
-            justify-content: space-between;
-        }
-        #image-frame {
-            flex-grow: 1;
-        }
-        #button-frame {
-            width: 200px;
-        }
-        #button-frame1, #button-frame2 {
-            height: 50%;
-        }
-    </style>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <div id="header">
+        <h1>Benji's console</h1>
+    </div>
     <div id="frame-container">
         <div id="image-frame">
-            <img id="stream-image" src="" alt="Stream image">
+            <img id="stream-image" src="empty-state.png" alt="Stream image">
         </div>
         <div id="button-frame">
             <div id="button-frame1">
-                <button onclick="callPostUrl1()">Call POST URL 1</button>
+                <button onclick="callPostUrl1()" class="button-82-pushable" role="button">
+                    <span class="button-82-shadow"></span>
+                    <span class="button-82-edge"></span>
+                    <span class="button-82-front text">
+                      Monitor
+                    </span>
+                  </button>
             </div>
             <div id="button-frame2">
-                <button onclick="callPostUrl2()">Call POST URL 2</button>
+                <button onclick="callPostUrl2()" class="button-82-pushable" role="button">
+                    <span class="button-82-shadow"></span>
+                    <span class="button-82-edge"></span>
+                    <span class="button-82-front text">
+                      Stop
+                    </span>
+                  </button>
             </div>
         </div>
     </div>
