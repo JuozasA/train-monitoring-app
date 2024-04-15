@@ -119,7 +119,7 @@ public class ImageProcessing {
       String label = detection.get("class_name").asText();  // Replace with your actual label
       int fontFace = Imgproc.FONT_ITALIC;
       double fontScale = 0.5;
-      Scalar textColor = new Scalar(255, 255, 255);  // White color
+      Scalar textColor = new Scalar(255, 0, 0);  // Red color
       int textThickness = 2;
       Imgproc.putText(image, label, new Point(x, y - 20), fontFace, fontScale, textColor, textThickness);
       String confidence = "Confidence: "+detection.get("confidence").asText();
