@@ -46,17 +46,19 @@
             // Call the second POST URL
             fetch('http://example.com/post2', { method: 'POST' });
         }
+        let lastImageTime = null;
 
         function startImageStream() {
             // Start the image stream
             const source = new EventSource('/train-monitoring');
             source.onmessage = function(event) {
-                //console.log('data:image/jpeg;base64,' + event.data);
-                document.getElementById('stream-image').src = 'data:image/jpeg;base64,' + event.data;
+                document.getElementById('stream-image').src = event.data; 
+                lastImageTime = new Date().getTime();
             };
         }
-
+      
         startImageStream();
+            
     </script>
 </body>
 </html>
