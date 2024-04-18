@@ -16,7 +16,7 @@
         </div>
         <div id="button-frame">
             <div id="button-frame1">
-                <button onclick="callPostUrl1()" class="button-82-pushable" role="button">
+                <button onclick="startCapture()" class="button-82-pushable" role="button">
                     <span class="button-82-shadow"></span>
                     <span class="button-82-edge"></span>
                     <span class="button-82-front text">
@@ -25,7 +25,7 @@
                   </button>
             </div>
             <div id="button-frame2">
-                <button onclick="callPostUrl2()" class="button-82-pushable" role="button">
+                <button onclick="stopCapture()" class="button-82-pushable" role="button">
                     <span class="button-82-shadow"></span>
                     <span class="button-82-edge"></span>
                     <span class="button-82-front text">
@@ -37,14 +37,26 @@
     </div>
 
     <script>
-        function callPostUrl1() {
+        function startCapture() {
             // Call the first POST URL
-            fetch('http://example.com/post1', { method: 'POST' });
+            fetch('/capture/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ command: "start" })
+             });
         }
 
-        function callPostUrl2() {
+        function stopCapture() {
             // Call the second POST URL
-            fetch('http://example.com/post2', { method: 'POST' });
+            fetch('/capture/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ command: "stop" })
+        });
         }
         let lastImageTime = null;
 
