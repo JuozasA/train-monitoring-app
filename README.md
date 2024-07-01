@@ -1,47 +1,46 @@
-# Demo Stop The Crazy Train - Lego Train monitoring app
+# Demo Stop The Crazy Train - Train monitoring app
 
 ![lego](https://www.lego.com/cdn/cs/set/assets/blt95604d8cc65e26c4/CITYtrain_Hero-XL-Desktop.png?fit=crop&format=webply&quality=80&width=1600&height=1000&dpr=1)
 
-## Description
+# Train-Monitoring-App
 
-This application is a part of global demo "Stop The Crazy train" :
-“ The train is running mad at full speed and has no driver ! Your mission, should you choose to accept it, is to train and deploy an AI model at the edge to stop the train before it crashes. This message will self-destruct in five seconds. Four. three. Two. one.  tam tam tada tum tum tada tum tum tada tum tum tada tiduduuuuummmm tiduduuuuuuuuummm ”
+Train-Monitoring-App is a module in a larger system that is responsible for monitoring and visualization of the train's operation.
 
+## How it works
 
-## Objectives
+Train-Monitoring-App receives a CloudEvent from the Train-CEQ-App module via Kafka. This CloudEvent contains actionable insights derived from the raw predictions made by the Intelligent-Train module, along with the original images. The Train-Monitoring-App uses this information for monitoring and visualization purposes.
 
-Showcase a Quarkus application that monitor the lego train actions, the application is triggered when a cloud event is produced in the topic `train-monitoring`. The application will extract the intial image captured from the camera, add the labels and the squares calculated by the AI application and construc a html page that allow the monitoring of the train.  
+## Prerequisites
 
+- **Kafka**: Train-Monitoring-App uses Kafka to receive data from the Train-CEQ-App module. You need to have a Kafka cluster running and accessible to Train-Monitoring-App. The Kafka cluster's URL should be specified in the `kafka.bootstrap.servers` property in the `application.properties` file.
 
+## Dependencies
 
-### Prerequisites
- 
-You will need:
-  - podman /docker
-  - Java openjdk version "17.0.9" 
-  - Quarkus
-  - Maven
+Train-Monitoring-App has the following dependencies:
 
-  - Kafka broker (we use AMQ Streams)
+- **Quarkus**: A Kubernetes-native Java stack tailored for GraalVM and OpenJDK HotSpot.
+- **Apache Kafka Client**: A client library for Apache Kafka.
+- **CloudEvents SDK**: A Java SDK for CloudEvents.
 
+These dependencies are managed by Maven and are specified in the `pom.xml` file.
 
-### Dev run
-run AMQ Streams 
-```sh
-docker-compose up
-```
-run the producer
-```sh
-cd producer
-mvn quarkus:dev -DskipTests=true   
-```
+## Related Modules
 
-run the consumer
-```sh
-cd producer
-mvn quarkus:dev -DskipTests=true   
-```
+Train-Monitoring-App is part of a larger system that includes the following modules:
 
-Go to http://localhost:8083 and monitor the train
+- **Capture-App**: This module captures video and sends it to Intelligent-Train.
+- **Intelligent-Train**: This module uses machine learning algorithms to make decisions based on the data received from the Capture-App.
+- **Train-CEQ-App**: This module processes the raw predictions made by the Intelligent-Train module, transforming them into actionable insights.
+- **Train-Controller**: This module receives decisions from Train-CEQ-App and controls the operation of the train accordingly.
 
+## How to run
 
+1. Clone the repository: `git clone https://github.com/Demo-AI-Edge-Crazy-Train/train-monitoring-app.git`
+2. Navigate to the project directory: `cd monitoring-app`
+3. Update the `application.properties` file with the appropriate values.
+4. Run the application: `./mvnw clean quarkus:dev`
+5. Go to http://localhost:8086
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

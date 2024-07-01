@@ -1,22 +1,22 @@
-# Demo Stop The Crazy Train - Train monitoring app
+# Demo Stop The Crazy Train - Monitoring app
 
 ![lego](https://www.lego.com/cdn/cs/set/assets/blt95604d8cc65e26c4/CITYtrain_Hero-XL-Desktop.png?fit=crop&format=webply&quality=80&width=1600&height=1000&dpr=1)
 
-# Train-Monitoring-App
+# Monitoring app
 
-Train-Monitoring-App is a module in a larger system that is responsible for monitoring and visualization of the train's operation.
+Monitoring app is a module in a larger system that is responsible for monitoring and visualization of the train's operation.
 
 ## How it works
 
-Train-Monitoring-App receives a CloudEvent from the Train-CEQ-App module via Kafka. This CloudEvent contains actionable insights derived from the raw predictions made by the Intelligent-Train module, along with the original images. The Train-Monitoring-App uses this information for monitoring and visualization purposes.
+Monitoring app receives a CloudEvent from the Train-CEQ-App module via Kafka. This CloudEvent contains actionable insights derived from the raw predictions made by the Intelligent-Train module, along with the original images. The Monitoring app uses this information for monitoring and visualization purposes.
 
 ## Prerequisites
 
-- **Kafka**: Train-Monitoring-App uses Kafka to receive data from the Train-CEQ-App module. You need to have a Kafka cluster running and accessible to Train-Monitoring-App. The Kafka cluster's URL should be specified in the `kafka.bootstrap.servers` property in the `application.properties` file.
+- **Kafka**: Monitoring app uses Kafka to receive data from the Train-CEQ-App module. You need to have a Kafka cluster running and accessible to Monitoring app. The Kafka cluster's URL should be specified in the `kafka.bootstrap.servers` property in the `application.properties` file.
 
 ## Dependencies
 
-Train-Monitoring-App has the following dependencies:
+Monitoring app has the following dependencies:
 
 - **Quarkus**: A Kubernetes-native Java stack tailored for GraalVM and OpenJDK HotSpot.
 - **Apache Kafka Client**: A client library for Apache Kafka.
@@ -26,7 +26,7 @@ These dependencies are managed by Maven and are specified in the `pom.xml` file.
 
 ## Related Modules
 
-Train-Monitoring-App is part of a larger system that includes the following modules:
+Monitoring app is part of a larger system that includes the following modules:
 
 - **Capture-App**: This module captures video and sends it to Intelligent-Train.
 - **Intelligent-Train**: This module uses machine learning algorithms to make decisions based on the data received from the Capture-App.
@@ -35,7 +35,7 @@ Train-Monitoring-App is part of a larger system that includes the following modu
 
 ## How to run
 
-1. Clone the repository: `git clone https://github.com/Demo-AI-Edge-Crazy-Train/train-monitoring-app.git`
+1. Clone the repository: `git clone https://github.com/Demo-AI-Edge-Crazy-Train/train-monitoring app.git`
 2. Navigate to the project directory: `cd monitoring-app`
 3. Update the `application.properties` file with the appropriate values.
 4. Run the application: `./mvnw clean quarkus:dev`
