@@ -41,3 +41,8 @@ nb-configuration.xml
 
 # Plugin directory
 /.quarkus/cli/plugins/
+# Mosquitto files
+mosquitto.db
+mosquitto.log
+
+
